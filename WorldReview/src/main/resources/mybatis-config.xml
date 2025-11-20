@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+ <typeAliases>
+ <!-- 클래스 alias가 들어갈 공간, ctrl을 눌러 해당 경로가 정상적인지 확인가능 정상적이라면 누를 수 있게 변함, 앞을 뒤로 축약한다는 의미-->
+ <!-- indexController 예시 -->
+ 
+  <typeAlias type="com.example.WorldReview.dto.UserDTO" alias="UserDTO"/>
+ 
+ </typeAliases>
+</configuration>

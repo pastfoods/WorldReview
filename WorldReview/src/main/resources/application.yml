@@ -1,0 +1,17 @@
+#들여쓰기 스페이스 바로 하기
+server:
+ port: 8080
+
+#database 연동설정 
+spring:
+ datasource:
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://127.0.0.1:3306/school_project?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+       #jdbc:mysql://localhost:{port번호}/{db이름}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  username: student
+  password: student
+
+#mybatis
+mybatis:
+ mapper-locations: classpath:mapper/*.xml
+ config-location: classpath:mybatis-config.xml
