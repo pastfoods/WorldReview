@@ -25,7 +25,7 @@
     </select>
 
     <!-- username 중복 확인 -->
-    <select id="countByUsername" parameterType="string" resultType="int">
+    <select id="checkByUsername" parameterType="string" resultType="int">
         SELECT COUNT(*) FROM user WHERE username = #{username}
     </select>
 </mapper>

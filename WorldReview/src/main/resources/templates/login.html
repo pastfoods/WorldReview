@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>로그인/회원가입</title>
+    <meta charset="UTF-8">
+    <title>로그인</title>
 </head>
 <body>
+
+<h2>로그인</h2>
+
+<!-- 로그인 실패 시 에러 메시지 표시용 -->
+<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+<form action="/login" method="post">
+    <div>
+        <label>아이디 :
+            <input type="text" name="username" required>
+        </label>
+    </div>
+    <div>
+        <label>비밀번호 :
+            <input type="password" name="password" required>
+        </label>
+    </div>
+    <div>
+        <button type="submit">로그인</button>
+    </div>
+</form>
+
+<hr>
+
+<!-- 아래 회원가입 하이퍼링크 -->
+<p>
+    아직 계정이 없으신가요?
+    <a href="/signup">회원가입</a>
+</p>
+<p>
+    <a href="/">메인화면으로 돌아가기</a>
+
+</p>
 
 </body>
 </html>

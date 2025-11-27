@@ -12,16 +12,20 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    //회원가입시 중복 확인
-    public boolean signup(UserDTO userDTO) {
+    public boolean checkByUsername(String username) {
+        return userRepository.checkByUsername(username);
+    }
 
-        if (userRepository.checkByUsername(userDTO.getUsername())) {
-            return false;  // 중복 아이디
+    public boolean signup(UserDTO userDTO) {
+        if (checkByUsername(userDTO.getUsername())) {
+            return false; // 중복 아이디
         }
         userRepository.save(userDTO);
         return true;
     }
-    //로그인
+
+
+    // 로그인
     public UserDTO login(String username, String password) {
 
         UserDTO user = userRepository.findByUsername(username);
@@ -33,3 +37,4 @@ public class UserService {
         return user;
     }
 }
+

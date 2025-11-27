@@ -1,18 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>- H O M E -</title>
 </head>
 <body>
 	<h2>국가별 리뷰 시스템 메인 페이지</h2>
-	<a href="/login">로그인</a>
-	<br><br>
+
+<!-- 로그인 안 한 상태일 때 -->
+<div th:if="${session.loginUser == null}">
+    <a href="/login">로그인</a>
+    <a href="/signup">회원가입</a>
+</div>
+
+<!-- 로그인 한 상태일 때 -->
+<div th:if="${session.loginUser != null}">
+    <span th:text="${session.loginUser.nickname}">사용자</span> 님 환영합니다!
+    <a href="/logout">로그아웃</a>
+</div>
+
+<!-- 나머지 메인 내용들... -->
+
+</body>
 	<!-- </a>
 	<a href="/memo">메모장</a>
 	<br><br>
 	<a href="/map">세계지도</a>
 	<br><br>
 	-->
-</body>
 </html>
