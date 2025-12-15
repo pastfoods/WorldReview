@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Review">
+
+    <resultMap id="ReviewMap" type="ReviewDTO">
+        <id property="id" column="id"/>
+        <result property="country_code" column="country_code"/>
+        <result property="user_id" column="user_id"/>
+        <result property="user_nickname" column="nickname"/>
+        <result property="rating" column="rating"/>
+        <result property="content" column="content"/>
+        <result property="created" column="created"/>
+        <result property="updated" column="updated"/>
+    </resultMap>
+
+    <!-- 특정 국가의 리뷰 목록 -->
+    <select id="findByCountry" parameterType="string" resultMap="ReviewMap">
+        SELECT r.id,
+               r.country_code,
+               r.user_id,
+               u.nickname,
+               r.rating,
+               r.content,
+               r.created,
+               r.updated
+        FROM review r
+        JOIN user u ON r.user_id = u.id
+        WHERE r.country_code = #{countryCode}
+        ORDER BY r.created DESC
+    </select>
+
+    <!-- 특정 국가의 평균 평점 -->
+    <select id="getAverageRating" parameterType="string" resultType="double">
+        SELECT IFNULL(ROUND(AVG(rating),1), 0.0)
+        FROM review
+        WHERE country_code = #{countryCode}
+    </select>
+
+    <!-- 리뷰 한 건 조회 (수정/삭제 권한 확인용) -->
+    <select id="findById" parameterType="int" resultMap="ReviewMap">
+        SELECT r.id,
+               r.country_code,
+               r.user_id,
+               u.nickname,
+               r.rating,
+               r.content,
+               r.created,
+               r.updated
+        FROM review r
+        JOIN user u ON r.user_id = u.id
+        WHERE r.id = #{id}
+    </select>
+
+    <!-- 리뷰 저장 -->
+    <insert id="save" parameterType="ReviewDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO review (country_code, user_id, rating, content)
+        VALUES (#{country_code}, #{user_id}, #{rating}, #{content})
+    </insert>
+
+    <!-- 리뷰 수정 -->
+    <update id="update" parameterType="ReviewDTO">
+        UPDATE review
+        SET rating = #{rating},
+            content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 리뷰 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM review
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

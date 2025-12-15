@@ -17,15 +17,13 @@
 <div th:if="${session.loginUser != null}">
     <span th:text="${session.loginUser.nickname}">사용자</span> 님 환영합니다!
     <a href="/logout">로그아웃</a>
+    <br>
+    <a href="/memo/list">메모장</a>
+    <a href="/world">세계지도</a>
+    
 </div>
 
 <!-- 나머지 메인 내용들... -->
 
 </body>
-	<!-- </a>
-	<a href="/memo">메모장</a>
-	<br><br>
-	<a href="/map">세계지도</a>
-	<br><br>
-	-->
 </html>

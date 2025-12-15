@@ -52,33 +52,40 @@ public class UserController {
     public String signup() {
         return "signup";  
     }
-    //중복체크
     @GetMapping("/check-username")
     @ResponseBody
-    public String checkUsername(@RequestParam String username) {
+    public String checkUsername(@RequestParam("username") String username) {
 
         boolean exists = userService.checkByUsername(username);
 
         if (exists) {
-            return "EXIST";   // 중복
+            return "EXIST";  // 이미 존재
         } else {
-            return "OK";      // 사용 가능
+            return "OK";     // 사용 가능
         }
     }
-    //회원가입 저장
+//회원가입 저장
     @PostMapping("/signup")
-    public String signup(UserDTO userDTO, Model model) {
+    public String signup(@RequestParam("username") String username,
+                         @RequestParam("password") String password,
+                         @RequestParam("nickname") String nickname,
+                         Model model) {
 
-        boolean ok = userService.signup(userDTO);
+        UserDTO user = new UserDTO();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setNickname(nickname);
+
+        boolean ok = userService.signup(user);
 
         if (!ok) {
-            model.addAttribute("error", "이미 사용 중인 아이디입니다.");
+            model.addAttribute("error", "이미 존재하는 아이디입니다.");
             return "signup";
         }
 
-        // 가입 성공 → 로그인 페이지로 이동
         return "redirect:/login";
     }
+
     //로그아웃
     @GetMapping("/logout")
     public String logout(HttpSession session) {

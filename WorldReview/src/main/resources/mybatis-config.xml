@@ -6,6 +6,7 @@
  <!-- indexController 예시 -->
  
 <typeAlias type="com.example.WorldReview.dto.UserDTO" alias="UserDTO"/>
- 
+ <typeAlias type="com.example.WorldReview.dto.MemoDTO" alias="MemoDTO"/>
+ <typeAlias type="com.example.WorldReview.dto.ReviewDTO" alias="ReviewDTO"/>
  </typeAliases>
 </configuration>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>세계 지도</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+		#map-wrapper {
+    		width: 5000px;      
+    		height: 2567px;     
+    		border: 1px solid #ccc;
+    		overflow: auto;
+    		position: relative;
+    		margin-top: 10px;
+		}
+
+        #world-map {
+            display: block;
+            width: 5000px;       
+            height: 2567px;
+        }
+
+        .country-marker {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.7);
+            border: 2px solid white;
+            cursor: pointer;
+            box-shadow: 0 0 4px rgba(0,0,0,0.4);
+        }
+
+        .country-marker:hover {
+            transform: scale(1.2);
+        }
+
+        #search-box {
+            margin-bottom: 10px;
+        }
+
+        #search-input {
+            padding: 4px 8px;
+        }
+
+        #search-button {
+            padding: 4px 10px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<h2>세계 지도</h2>
+
+<div id="search-box">
+    <input id="search-input" type="text"
+           placeholder="국가 코드 또는 이름 (예: KR, 한국, US, 미국, JP, 일본)">
+    <button id="search-button" type="button" onclick="searchCountry()">이동</button>
+    <span class="hint">클릭 시 해당 국가 리뷰 페이지(/world/코드)로 이동합니다.</span>
+</div>
+
+<div id="map-wrapper">
+    <img id="world-map" src="/images/world-map-color.png" alt="세계 지도">
+
+    <!-- 각 국가 마커 (좌표는 대략값, 필요하면 조정) -->
+<!-- 미국 -->
+<div class="country-marker" data-code="US" title="미국"
+     style="left: 1100px; top: 1090px;"
+     onclick="goCountry('US')"></div>
+
+<!-- 캐나다 -->
+<div class="country-marker" data-code="CA" title="캐나다"
+     style="left: 1020px; top: 780px;"
+     onclick="goCountry('CA')"></div>
+<!-- 멕시코 -->
+<div class="country-marker" data-code="MX" title="멕시코"
+     style="left: 1110px; top: 1300px;"
+     onclick="goCountry('MX')"></div>
+     
+<!-- 그린란드 -->
+<div class="country-marker" data-code="GR" title="그린란드"
+     style="left: 1880px; top: 395px;"
+     onclick="goCountry('GR')"></div>
+     
+<!-- 과테밀라 -->
+<div class="country-marker" data-code="GT" title="과테밀라"
+     style="left: 1242px; top: 1422px;"
+     onclick="goCountry('GT')"></div>
+          
+<!-- 벨리즈 -->
+<div class="country-marker" data-code="BZ" title="벨리즈"
+     style="left: 1261px; top: 1397px;"
+     onclick="goCountry('BZ')"></div>
+     
+<!-- 온두라스 -->
+<div class="country-marker" data-code="HN" title="온두라스"
+     style="left: 1293px; top: 1423px;"
+     onclick="goCountry('HN')"></div>
+    
+<!-- 엘살바도르 -->
+<div class="country-marker" data-code="ET" title="엘살바도르"
+     style="left: 1263px; top: 1441px;"
+     onclick="goCountry('ET')"></div>
+        
+<!-- 니카라과 -->
+<div class="country-marker" data-code="NI" title="니카라과"
+     style="left: 1310px; top: 1457px;"
+     onclick="goCountry('NI')"></div>
+        
+<!-- 코스타리카 -->
+<div class="country-marker" data-code="CR" title="코스타리카"
+     style="left: 1327px; top: 1488px;"
+     onclick="goCountry('CR')"></div>
+        
+<!-- 파나마 -->
+<div class="country-marker" data-code="PA" title="파나마"
+     style="left: 1365px; top: 1507px;"
+     onclick="goCountry('PA')"></div>
+        
+<!-- 콜롬비아 -->
+<div class="country-marker" data-code="CO" title="콜롬비아"
+     style="left: 1470px; top: 1560px;"
+     onclick="goCountry('CO')"></div>
+        
+<!-- 베네수엘라 -->
+<div class="country-marker" data-code="VE" title="베네수엘라"
+     style="left: 1562px; top: 1498px;"
+     onclick="goCountry('VE')"></div>
+        
+<!-- 쿠바 -->
+<div class="country-marker" data-code="CU" title="쿠바"
+     style="left: 1418px; top: 1346px;"
+     onclick="goCountry('CU')"></div>
+        
+<!-- 자메이카 -->
+<div class="country-marker" data-code="JM" title="자메이카"
+     style="left: 1409px; top: 1382px;"
+     onclick="goCountry('JM')"></div>
+        
+<!-- 아이티 -->
+<div class="country-marker" data-code="HT" title="아이티"
+     style="left: 1470px; top: 1370px;"
+     onclick="goCountry('HT')"></div>
+        
+<!-- 도미니카공화국 -->
+<div class="country-marker" data-code="DO" title="도미니카공화국"
+     style="left: 1497px; top: 1370px;"
+     onclick="goCountry('DO')"></div>
+        
+<!-- 푸에르토리코 -->
+<div class="country-marker" data-code="PR" title="푸에르토리코"
+     style="left: 1550px; top: 1377px;"
+     onclick="goCountry('PR')"></div>
+        
+<!-- 에콰도르 -->
+<div class="country-marker" data-code="EC" title="에콰도르"
+     style="left: 1402px; top: 1624px;"
+     onclick="goCountry('EC')"></div>
+        
+<!-- 페루 -->
+<div class="country-marker" data-code="PE" title="페루"
+     style="left: 1435px; top: 1711px;"
+     onclick="goCountry('PE')"></div>
+        
+<!-- 가이아나 -->
+<div class="country-marker" data-code="GY" title="가이아나"
+     style="left: 1650px; top: 1551px;"
+     onclick="goCountry('GY')"></div>
+        
+<!-- 수리남 -->
+<div class="country-marker" data-code="SR" title="수리남"
+     style="left: 1690px; top: 1550px;"
+     onclick="goCountry('SR')"></div>
+        
+<!-- 프랑스령 기아나 -->
+<div class="country-marker" data-code="GF" title="프랑스령 기아나"
+     style="left: 1725px; top: 1558px;"
+     onclick="goCountry('GF')"></div>
+    
+<!-- 브라질 -->
+<div class="country-marker" data-code="BR" title="브라질"
+     style="left: 1730px; top: 1721px;"
+     onclick="goCountry('BR')"></div>
+    
+<!-- 볼리비아 -->
+<div class="country-marker" data-code="BO" title="볼리비아"
+     style="left: 1584px; top: 1800px;"
+     onclick="goCountry('BO')"></div>
+        
+<!-- 칠레 -->
+<div class="country-marker" data-code="CL" title="칠레"
+     style="left: 1486px; top: 2085px;"
+     onclick="goCountry('CL')"></div>
+        
+<!-- 파라과이 -->
+<div class="country-marker" data-code="PY" title="파라과이"
+     style="left: 1661px; top: 1886px;"
+     onclick="goCountry('PY')"></div>
+        
+<!-- 우루과이 -->
+<div class="country-marker" data-code="UY" title="우루과이"
+     style="left: 1693px; top: 2033px;"
+     onclick="goCountry('UY')"></div>
+        
+<!-- 아르헨티나 -->
+<div class="country-marker" data-code="AR" title="아르헨티나"
+     style="left: 1587px; top: 2057px;"
+     onclick="goCountry('AR')"></div>
+        
+<!-- 포클랜드 제도 -->
+<div class="country-marker" data-code="FK" title="포클랜드 제도"
+     style="left: 1652px; top: 2320px;"
+     onclick="goCountry('FK')"></div>
+        
+<!-- 사우스조지아 사우스샌드 위치 제도 -->
+<div class="country-marker" data-code="GS" title="사우스조지아 사우스샌드 위치 제도"
+     style="left: 1945px; top: 2364px;"
+     onclick="goCountry('GS')"></div>
+        
+<!-- 생피에르 미클롱 -->
+<div class="country-marker" data-code="PM" title="생피에르 미클롱"
+     style="left: 1688px; top: 970px;"
+     onclick="goCountry('PM')"></div>
+        
+<!-- 아이슬란드 -->
+<div class="country-marker" data-code="IS" title="아이슬란드"
+     style="left: 2172px; top: 628px;"
+     onclick="goCountry('IS')"></div>
+     
+<!-- 러시아 -->
+<div class="country-marker" data-code="RU" title="러시아"
+     style="left: 3609px; top: 680px;"
+     onclick="goCountry('RU')"></div>
+    
+        
+<!-- 페로제도 -->
+<div class="country-marker" data-code="FO" title="페로제도"
+     style="left: 2273px; top: 700px;"
+     onclick="goCountry('FO')"></div>
+     
+    <!-- 아일랜드 -->
+<div class="country-marker" data-code="IE" title="아일랜드"
+     style="left: 2243px; top: 886px;"
+     onclick="goCountry('IE')"></div>
+    
+    <!-- 영국 -->
+<div class="country-marker" data-code="GB" title="영국"
+     style="left: 2322px; top: 875px;"
+     onclick="goCountry('GB')"></div>
+    
+    <!-- 맨 섬 -->
+<div class="country-marker" data-code="IM" title="맨 섬"
+     style="left: 2285px; top: 870px;"
+     onclick="goCountry('IM')"></div>
+    
+    <!-- 프랑스 -->
+<div class="country-marker" data-code="FR" title="프랑스"
+     style="left: 2380px; top: 973px;"
+     onclick="goCountry('FR')"></div>
+   
+    <!-- 스페인 -->
+<div class="country-marker" data-code="ES" title="스페인"
+     style="left: 2295px; top: 1072px;"
+     onclick="goCountry('ES')"></div>
+     
+    <!-- 지브롤터 -->
+<div class="country-marker" data-code="GI" title="지브롤터"
+     style="left: 2277px; top: 1147px;"
+     onclick="goCountry('GI')"></div>
+     
+    <!-- 포르투갈 -->
+<div class="country-marker" data-code="PT" title="포르투갈"
+     style="left: 2238px; top: 1092px;"
+     onclick="goCountry('PT')"></div>
+    
+    <!-- 벨기에 -->
+<div class="country-marker" data-code="BE" title="벨기에"
+     style="left: 2406px; top: 928px;"
+     onclick="goCountry('BE')"></div>
+    
+    <!-- 네덜란드 -->
+<div class="country-marker" data-code="NL" title="네덜란드"
+     style="left: 2414px; top: 905px;"
+     onclick="goCountry('NL')"></div>
+    
+    <!-- 독일 -->
+<div class="country-marker" data-code="DE" title="독일"
+     style="left: 2475px; top: 893px;"
+     onclick="goCountry('DE')"></div>
+    
+    <!-- 룩셈부르크 -->
+<div class="country-marker" data-code="LU" title="룩셈부르크"
+     style="left: 2424px; top: 945px;"
+     onclick="goCountry('LU')"></div>
+    
+    <!-- 스위스 -->
+<div class="country-marker" data-code="CH" title="스위스"
+     style="left: 2450px; top: 989px;"
+     onclick="goCountry('CH')"></div>
+    
+    <!-- 모나코 -->
+<div class="country-marker" data-code="MC" title="모나코"
+     style="left: 2439px; top: 1039px;"
+     onclick="goCountry('MC')"></div>
+    
+    <!-- 이탈리아 -->
+<div class="country-marker" data-code="IT" title="이탈리아"
+     style="left: 2485px; top: 1010px;"
+     onclick="goCountry('IT')"></div>
+    
+    <!-- 덴마크 -->
+<div class="country-marker" data-code="DK" title="덴마크"
+     style="left: 2459px; top: 841px;"
+     onclick="goCountry('DK')"></div>
+     
+    <!-- 노르웨이 -->
+<div class="country-marker" data-code="NO" title="노르웨이"
+     style="left: 2459px; top: 728px;"
+     onclick="goCountry('NO')"></div>
+     
+    <!-- 스웨덴 -->
+<div class="country-marker" data-code="SE" title="스웨덴"
+     style="left: 2568px; top: 655px;"
+     onclick="goCountry('SE')"></div>
+     
+    <!-- 핀란드 -->
+<div class="country-marker" data-code="FI" title="핀란드"
+     style="left: 2673px; top: 700px;"
+     onclick="goCountry('FI')"></div>
+     
+    <!-- 오스트리아 -->
+<div class="country-marker" data-code="AT" title="오스트리아"
+     style="left: 2525px; top: 979px;"
+     onclick="goCountry('AT')"></div>
+     
+    <!-- 체코 -->
+<div class="country-marker" data-code="CZ" title="체코"
+     style="left: 2536px; top: 943px;"
+     onclick="goCountry('CZ')"></div>
+     
+    <!-- 폴란드 -->
+<div class="country-marker" data-code="PL" title="폴란드"
+     style="left: 2580px; top: 875px;"
+     onclick="goCountry('PL')"></div>
+     
+    <!-- 슬로바키아 -->
+<div class="country-marker" data-code="SK" title="슬로바키아"
+     style="left: 2583px; top: 956px;"
+     onclick="goCountry('SK')"></div>
+     
+    <!-- 헝가리 -->
+<div class="country-marker" data-code="HU" title="헝가리"
+     style="left: 2576px; top: 986px;"
+     onclick="goCountry('HU')"></div>
+     
+    <!-- 슬로베니아 -->
+<div class="country-marker" data-code="SI" title="슬로베니아"
+     style="left: 2524px; top: 998px;"
+     onclick="goCountry('SI')"></div>
+     
+    <!-- 크로아티아 -->
+<div class="country-marker" data-code="HR" title="크로아티아"
+     style="left: 2548px; top: 1005px;"
+     onclick="goCountry('HR')"></div>
+     
+    <!-- 보스니아 헤르체고비나 -->
+<div class="country-marker" data-code="BA" title="보스니아 헤르체고비나"
+     style="left: 2565px; top: 1029px;"
+     onclick="goCountry('BA')"></div>
+     
+    <!-- 세르비아 -->
+<div class="country-marker" data-code="RS" title="세르비아"
+     style="left: 2602px; top: 1028px;"
+     onclick="goCountry('RS')"></div>
+     
+    <!-- 몬테네그로 -->
+<div class="country-marker" data-code="ME" title="몬테네그로"
+     style="left: 2575px; top: 1050px;"
+     onclick="goCountry('ME')"></div>
+     
+    <!-- 알바니아 -->
+<div class="country-marker" data-code="AL" title="알바니아"
+     style="left: 2592px; top: 1076px;"
+     onclick="goCountry('AL')"></div>
+     
+    <!-- 북마케도니아 -->
+<div class="country-marker" data-code="MK" title="북마케도니아"
+     style="left: 2612px; top: 1065px;"
+     onclick="goCountry('MK')"></div>
+     
+    <!-- 그리스 -->
+<div class="country-marker" data-code="GR" title="그리스"
+     style="left: 2614px; top: 1100px;"
+     onclick="goCountry('GR')"></div>
+     
+    <!-- 에스토니아 -->
+<div class="country-marker" data-code="EE" title="에스토니아"
+     style="left: 2663px; top: 791px;"
+     onclick="goCountry('EE')"></div>
+     
+    <!-- 라트비아 -->
+<div class="country-marker" data-code="LV" title="라트비아"
+     style="left: 2658px; top: 825px;"
+     onclick="goCountry('LV')"></div>
+     
+    <!-- 리투아니아 -->
+<div class="country-marker" data-code="LT" title="리투아니아"
+     style="left: 2641px; top: 850px;"
+     onclick="goCountry('LT')"></div>
+     
+    <!-- 벨라루스 -->
+<div class="country-marker" data-code="BY" title="벨라루스"
+     style="left: 2695px; top: 875px;"
+     onclick="goCountry('BY')"></div>
+     
+    <!-- 우크라이나 -->
+<div class="country-marker" data-code="UA" title="우크라이나"
+     style="left: 2737px; top: 942px;"
+     onclick="goCountry('UA')"></div>
+     
+    <!-- 루마니아 -->
+<div class="country-marker" data-code="RO" title="루마니아"
+     style="left: 2652px; top: 991px;"
+     onclick="goCountry('RO')"></div>
+    
+    <!-- 몰도바 -->
+<div class="country-marker" data-code="MD" title="몰도바"
+     style="left: 2698px; top: 984px;"
+     onclick="goCountry('MD')"></div>
+      
+    <!-- 불가리아 -->
+<div class="country-marker" data-code="BG" title="불가리아"
+     style="left: 2657px; top: 1054px;"
+     onclick="goCountry('BG')"></div>
+     
+    <!-- 튀르키에 -->
+<div class="country-marker" data-code="TR" title="튀르키에"
+     style="left: 2785px; top: 1095px;"
+     onclick="goCountry('TR')"></div>
+     
+    
+     
+     
+    <!-- 안도라 -->
+<div class="country-marker" data-code="AD" title="안도라"
+     style="left: 2362px; top: 1058px;"
+     onclick="goCountry('AD')"></div>
+    
+    <!-- 모로코 -->
+<div class="country-marker" data-code="MA" title="모로코"
+     style="left: 2260px; top: 1190px;"
+     onclick="goCountry('MA')"></div>
+    
+    <!-- 서사하라 -->
+<div class="country-marker" data-code="EH" title="서사하라"
+     style="left: 2170px; top: 1300px;"
+     onclick="goCountry('EH')"></div>
+    
+
+
+</div>
+<script>
+document.addEventListener("click", function (e) {
+    const map = document.getElementById("world-map");
+    const rect = map.getBoundingClientRect();
+
+    if (e.clientX >= rect.left && e.clientX <= rect.right &&
+        e.clientY >= rect.top  && e.clientY <= rect.bottom) {
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        console.log("좌표:", x, y);
+        alert("좌표: " + x + ", " + y);
+    }
+});
+</script>
+<script>
+    // 국가 코드/이름별 위치 정보
+    // (left / top 좌표는 위의 마커 위치와 일치하도록 대략 맞춰둠)
+    const countryPositions = {
+        "US": {x: 430, y: 250, names: ["미국", "usa", "united states"]},
+        "CA": {x: 440, y: 200, names: ["캐나다", "canada"]},
+        "BR": {x: 540, y: 360, names: ["브라질", "brazil"]},
+        "GB": {x: 770, y: 245, names: ["영국", "uk", "united kingdom", "britain"]},
+        "FR": {x: 785, y: 265, names: ["프랑스", "france"]},
+        "IN": {x: 960, y: 345, names: ["인도", "india"]},
+        "CN": {x: 1020, y: 290, names: ["중국", "china"]},
+        "JP": {x: 1120, y: 295, names: ["일본", "japan"]},
+        "KR": {x: 1085, y: 300, names: ["한국", "대한민국", "korea", "south korea", "kr"]},
+        "AU": {x: 1160, y: 450, names: ["호주", "australia"]}
+    };
+
+    function searchCountry() {
+        const input = document.getElementById("search-input").value.trim().toLowerCase();
+        if (!input) return;
+
+        // 코드 또는 이름으로 검색
+        let foundCode = null;
+
+        // 1) 코드 직접 입력 (예: KR, US)
+        if (countryPositions[input.toUpperCase()]) {
+            foundCode = input.toUpperCase();
+        } else {
+            // 2) 이름으로 검색
+            for (const [code, info] of Object.entries(countryPositions)) {
+                if (info.names.some(name => name.toLowerCase() === input)) {
+                    foundCode = code;
+                    break;
+                }
+            }
+        }
+
+        if (!foundCode) {
+            alert("해당 국가를 찾을 수 없습니다. 예: KR, 한국, US, 미국, JP, 일본");
+            return;
+        }
+
+        const pos = countryPositions[foundCode];
+        const wrapper = document.getElementById("map-wrapper");
+
+        // 선택한 위치가 중앙 근처에 오도록 스크롤
+        wrapper.scrollLeft = pos.x - wrapper.clientWidth / 2;
+        wrapper.scrollTop  = pos.y - wrapper.clientHeight / 2;
+
+        // 살짝 강조 효과 (선택된 마커 흔들기/확대 등)
+        highlightMarker(foundCode);
+    }
+
+    function highlightMarker(code) {
+        const markers = document.querySelectorAll(".country-marker");
+        markers.forEach(m => {
+            if (m.getAttribute("data-code") === code) {
+                m.style.transform = "scale(1.4)";
+                setTimeout(() => {
+                    m.style.transform = "scale(1.0)";
+                }, 600);
+            }
+        });
+    }
+
+    function goCountry(code) {
+        // 국가 리뷰 페이지로 이동
+        // Spring Controller에서 /world/{countryCode} 매핑되어 있어야 함
+        window.location.href = "/world/" + code;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>메모 상세</title>
+</head>
+<body>
+
+<h2>메모 상세 / 수정</h2>
+
+<form th:action="@{|/memo/${memo.id}/update|}" method="post">
+
+    <!-- 메모 ID는 숨겨서 전송 -->
+    <input type="hidden" name="id" th:value="${memo.id}"/>
+
+    <div>
+        <label>제목 :
+            <input type="text" name="title"
+                   th:value="${memo.title}" required/>
+        </label>
+    </div>
+
+    <div>
+        <label>내용 :</label><br>
+        <textarea name="content" rows="10" cols="50"
+                  th:text="${memo.content}"></textarea>
+    </div>
+
+    <p>
+        작성일: <span th:text="${memo.created}">작성일</span><br>
+        수정일: <span th:text="${memo.updated}">수정일</span>
+    </p>
+
+    <button type="submit">저장</button>
+</form>
+
+<!-- 삭제는 그대로 별도 폼으로 유지 -->
+<form th:action="@{|/memo/${memo.id}/delete|}" method="post" style="margin-top: 10px;">
+    <button type="submit">삭제</button>
+</form>
+
+<a href="/memo/list">목록으로</a>
+
+</body>
+</html>

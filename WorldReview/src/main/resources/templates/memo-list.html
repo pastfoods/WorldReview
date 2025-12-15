@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 메모 목록</title>
+</head>
+<body>
+
+<h2>내 메모 목록</h2>
+
+<a href="/memo/new">새 메모 작성</a>
+<a href="/">메인으로</a>
+
+<hr>
+
+<table border="1">
+    <tr>
+        <th>제목</th>
+        <th>작성일</th>
+    </tr>
+    <tr th:each="memo : ${memos}">
+        <td>
+            <a th:href="@{|/memo/${memo.id}|}"
+               th:text="${memo.title}">제목</a>
+        </td>
+        <td th:text="${memo.created}">작성일</td>
+    </tr>
+</table>
+
+</body>
+</html>
