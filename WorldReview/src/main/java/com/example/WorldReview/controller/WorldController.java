@@ -28,23 +28,28 @@ public class WorldController {
     }
 
 
-    // 2. 국가별 리뷰 페이지
-    @GetMapping("/{countryCode}")
+ // 2. 국가별 리뷰 페이지
+    @GetMapping("/world/{countryCode}")
     public String countryReviews(@PathVariable("countryCode") String countryCode,
-                                 Model model) {
+                                 Model model,
+                                 HttpSession session) {
 
         List<ReviewDTO> reviews = reviewService.getReviews(countryCode);
         double avgRating = reviewService.getAverageRating(countryCode);
 
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
         model.addAttribute("countryCode", countryCode);
         model.addAttribute("reviews", reviews);
         model.addAttribute("avgRating", avgRating);
+        model.addAttribute("loginUser", loginUser); // HTML에서 loginUser 쓰려면 필요
 
         return "country-reviews";
     }
 
+
     // 3. 리뷰 작성 (로그인 필요)
-    @PostMapping("/{countryCode}/review")
+    @PostMapping("/world/{countryCode}/review")
     public String createReview(@PathVariable("countryCode") String countryCode,
                                @RequestParam("rating") double rating,
                                @RequestParam("content") String content,
@@ -67,7 +72,7 @@ public class WorldController {
     }
 
     // 4. 리뷰 수정 (작성자만)
-    @PostMapping("/review/{id}/update")
+    @PostMapping("/world/review/{id}/update")
     public String updateReview(@PathVariable("id") int id,
                                @RequestParam("rating") double rating,
                                @RequestParam("content") String content,
@@ -91,7 +96,7 @@ public class WorldController {
     }
 
     // 5. 리뷰 삭제 (작성자만)
-    @PostMapping("/review/{id}/delete")
+    @PostMapping("/world/review/{id}/delete")
     public String deleteReview(@PathVariable("id") int id,
                                HttpSession session) {
 
