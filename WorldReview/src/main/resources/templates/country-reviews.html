@@ -50,7 +50,7 @@
 <div th:each="review : ${reviews}">
     <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
         <p>
-            <b th:text="${review.nickname}">닉네임</b>
+            <b th:text="${review.user_nickname}">닉네임</b>
             (<span th:text="${review.rating}">0.0</span> / 5.0)
         </p>
 
@@ -61,7 +61,7 @@
         </p>
 
         <!-- 작성자 본인만 수정/삭제 -->
-        <div th:if="${loginUser != null and loginUser.id == review.userId}">
+		<div th:if="${loginUser != null and loginUser.id == review.user_id}">
             <form th:action="@{|/world/review/${review.id}/update|}" method="post">
                 <label>별점 수정:
                     <input type="number" name="rating" step="0.1" min="0" max="5"

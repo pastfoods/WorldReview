@@ -1,6 +1,8 @@
 package com.example.WorldReview.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,8 +19,11 @@ public class ReviewRepository {
     }
 
     public List<ReviewDTO> findByCountry(String countryCode) {
-        return sql.selectList("Review.findByCountry", countryCode);
+        Map<String, Object> param = new HashMap<>();
+        param.put("countryCode", countryCode);
+        return sql.selectList("Review.findByCountry", param);
     }
+
 
     public Double getAverageRating(String countryCode) {
         return sql.selectOne("Review.getAverageRating", countryCode);

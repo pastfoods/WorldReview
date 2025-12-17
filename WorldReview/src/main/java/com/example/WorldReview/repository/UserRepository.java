@@ -28,4 +28,14 @@ public class UserRepository {
     public UserDTO findByUsername(String username) {
         return sql.selectOne("User.findByUsername", username);
     }
+
+	public boolean existsByNickname(String nickname) {
+		Integer count = sql.selectOne("User.existsByNickname", nickname);
+        return count != null && count > 0;
+	}
+	public boolean checkByNickname(String nickname) {
+	    Integer cnt = sql.selectOne("User.checkByNickname", nickname);
+	    return cnt != null && cnt > 0;
+	}
+
 }

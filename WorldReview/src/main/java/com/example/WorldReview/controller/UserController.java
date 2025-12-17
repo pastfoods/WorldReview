@@ -17,13 +17,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-    // UserService 를 스프링이 주입해줌
     private final UserService userService;
 
     // 로그인 화면
     @GetMapping("/login")
     public String loginForm() {
-        return "login";   // templates/login.html
+        return "login";  
     }
 
     // 로그인 처리
@@ -38,13 +37,11 @@ public class UserController {
 
         if (user == null) {
             model.addAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");
-            return "login";   // 다시 로그인 화면
+            return "login";   
         }
 
-        // 로그인 성공 → 세션에 저장
         session.setAttribute("loginUser", user);
 
-        // 로그인 후 이동할 페이지 (메인/home 등으로 수정 가능)
         return "redirect:/";
     }
     //회원가입 페이지
@@ -59,11 +56,18 @@ public class UserController {
         boolean exists = userService.checkByUsername(username);
 
         if (exists) {
-            return "EXIST";  // 이미 존재
+            return "EXIST";  
         } else {
-            return "OK";     // 사용 가능
+            return "OK";   
         }
     }
+    @GetMapping("/check-nickname")
+    @ResponseBody
+    public String checkNickname(@RequestParam("nickname") String nickname) {
+        boolean exists = userService.checkByNickname(nickname);
+        return exists ? "EXIST" : "OK";
+    }
+
 //회원가입 저장
     @PostMapping("/signup")
     public String signup(@RequestParam("username") String username,
@@ -71,26 +75,36 @@ public class UserController {
                          @RequestParam("nickname") String nickname,
                          Model model) {
 
+        //아이디 중복
+        if (userService.checkByUsername(username)) {
+            model.addAttribute("usernameError", "이미 존재하는 아이디입니다.");
+            model.addAttribute("prevUsername", username);
+            model.addAttribute("prevNickname", nickname);
+            return "signup";
+        }
+
+        //닉네임 중복
+        if (userService.checkByNickname(nickname)) {
+            model.addAttribute("nicknameError", "이미 존재하는 닉네임입니다.");
+            model.addAttribute("prevUsername", username);
+            model.addAttribute("prevNickname", nickname);
+            return "signup";
+        }
         UserDTO user = new UserDTO();
         user.setUsername(username);
         user.setPassword(password);
         user.setNickname(nickname);
-
-        boolean ok = userService.signup(user);
-
-        if (!ok) {
-            model.addAttribute("error", "이미 존재하는 아이디입니다.");
-            return "signup";
-        }
-
+        
+        userService.signup(user);
+        
         return "redirect:/login";
     }
 
     //로그아웃
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();   // 세션 전체 삭제
-        return "redirect:/";    // 메인 페이지로 이동
+        session.invalidate();  
+        return "redirect:/";    
     }
 
 

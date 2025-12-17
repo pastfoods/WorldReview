@@ -16,18 +16,17 @@ public class UserService {
     public boolean checkByUsername(String username) {
         return userRepository.checkByUsername(username);
     }
+    // 닉네임 중복 확인 (추가)
+    public boolean checkByNickname(String nickname) {
+        return userRepository.checkByNickname(nickname);
+    }
 
     // 회원가입
-    public boolean signup(UserDTO userDTO) {
-
-        // 이미 있는 아이디면 false
-        if (checkByUsername(userDTO.getUsername())) {
-            return false;
-        }
-
+    public void signup(UserDTO userDTO) {
         userRepository.save(userDTO);
-        return true;
     }
+
+
 
     // 로그인
     public UserDTO login(String username, String password) {

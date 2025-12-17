@@ -1049,22 +1049,6 @@
 
 </div>
 <script>
-document.addEventListener("click", function (e) {
-    const map = document.getElementById("world-map");
-    const rect = map.getBoundingClientRect();
-
-    if (e.clientX >= rect.left && e.clientX <= rect.right &&
-        e.clientY >= rect.top  && e.clientY <= rect.bottom) {
-
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        console.log("좌표:", x, y);
-        alert("좌표: " + x + ", " + y);
-    }
-});
-</script>
-<script>
     // 국가 코드/이름별 위치 정보
     // (left / top 좌표는 위의 마커 위치와 일치하도록 대략 맞춰둠)
     const countryPositions = {

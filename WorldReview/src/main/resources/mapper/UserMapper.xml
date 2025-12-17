@@ -28,4 +28,12 @@
     <select id="checkByUsername" parameterType="string" resultType="int">
         SELECT COUNT(*) FROM user WHERE username = #{username}
     </select>
+    
+    <!-- nickname 중복 확인 -->
+    <select id="checkByNickname" parameterType="string" resultType="int">
+    SELECT COUNT(*)
+    FROM user
+    WHERE nickname = #{nickname}
+</select>
+    
 </mapper>
